@@ -10,7 +10,6 @@ import SwiftUI
 struct ContentView: View {
     @State private var expenses = Expenses()
     @State private var settings = Settings()
-    @State private var showingAddExpense = false
     @State private var selectedExpenseType = "Personal"
     let expenseTypes = ["Personal", "Business"]
     let currencyOptions = ["USD", "CAD", "EUR", "GBP", "JPY"]
@@ -39,14 +38,12 @@ struct ContentView: View {
                     }
                     .pickerStyle(DefaultPickerStyle())
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Add Expense", systemImage: "plus") {
-                        showingAddExpense = true
-                    }.padding(.trailing)
+                ToolbarItem(placement: .confirmationAction) {
+                    NavigationLink(destination: AddView(expenses: expenses, settings: settings)) {
+                        Image(systemName: "plus")
+                    }
+                    
                 }
-            }
-            .sheet(isPresented: $showingAddExpense) {
-                AddView(expenses: expenses, settings: settings)
             }
         }
     }
