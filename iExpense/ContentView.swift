@@ -5,41 +5,54 @@
 //  Created by Anthony Candelino on 2024-07-01.
 //
 
+import SwiftData
 import SwiftUI
 
 struct ContentView: View {
-    @State private var expenses = Expenses()
-    @State private var settings = Settings()
-    @State private var selectedExpenseType = "Personal"
+    @Environment(\.modelContext) var modelContext
+    @State private var selectedExpenseType = "All"
+    @State private var sortOrder = [
+        SortDescriptor(\ExpenseItem.name),
+        SortDescriptor(\ExpenseItem.amount)
+    ]
+    
     let expenseTypes = ["Personal", "Business"]
-    let currencyOptions = ["USD", "CAD", "EUR", "GBP", "JPY"]
     
     var body: some View {
         NavigationStack {
-            Picker("Expense Types", selection: $selectedExpenseType) {
-                ForEach(expenseTypes, id: \.self) {
-                    Text($0)
-                }
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding()
-            List {
-                ForEach(expenses.items.filter({ item in item.type == selectedExpenseType })) { item in
-                    ExpenseRow(name: item.name, type: item.type, amount: item.amount, settings: settings)
-                }.onDelete(perform: removeItems)
-            }
+            ExpenseItemsView(selectedExpenseType: selectedExpenseType, sortOrder: sortOrder)
             .navigationTitle("iExpense")
             .toolbar {
-                ToolbarItem() {
-                    Picker(settings.currencyCode, selection: $settings.currencyCode) {
-                        ForEach(settings.availableCurrencies, id: \.self) {
-                            Text($0)
+                ToolbarItem {
+                    Menu("Show", systemImage: "line.3.horizontal.decrease.circle") {
+                        Picker("Sort", selection: $selectedExpenseType) {
+                            Text("Show All")
+                                .tag("All")
+                            Text("Show Personal Expenses")
+                                .tag("Personal")
+                            Text("Show Business Expenses")
+                                .tag("Business")
                         }
                     }
-                    .pickerStyle(DefaultPickerStyle())
+                }
+                ToolbarItem {
+                    Menu("Sort", systemImage: "arrow.up.arrow.down") {
+                        Picker("Sort", selection: $sortOrder) {
+                            Text("Sort by Name")
+                                .tag([
+                                    SortDescriptor(\ExpenseItem.name),
+                                    SortDescriptor(\ExpenseItem.amount)
+                                ])
+                            Text("Sort by Amount")
+                                .tag([
+                                    SortDescriptor(\ExpenseItem.amount),
+                                    SortDescriptor(\ExpenseItem.name)
+                                ])
+                        }
+                    }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    NavigationLink(destination: AddView(expenses: expenses, settings: settings)) {
+                    NavigationLink(destination: AddView()) {
                         Image(systemName: "plus")
                     }
                     
@@ -47,17 +60,9 @@ struct ContentView: View {
             }
         }
     }
-    
-    func removeItems(at offsets: IndexSet) {
-        let currentList = expenses.items.filter({ item in item.type == selectedExpenseType })
-        if let indexToDelete = offsets.first {
-            let itemToDelete = currentList[indexToDelete]
-            let itemId = itemToDelete.id
-            expenses.items.removeAll(where: {$0.id == itemId})
-        }
-    }
 }
 
 #Preview {
     ContentView()
+        .modelContainer(for: ExpenseItem.self)
 }

@@ -5,19 +5,20 @@
 //  Created by Anthony Candelino on 2024-07-03.
 //
 
+import SwiftData
 import SwiftUI
 
 struct AddView: View {
     @Environment(\.dismiss) var dismiss
-    
+    @Environment(\.modelContext) var modelContext
+    @Query var expenses: [ExpenseItem]
+
     @State private var name = ""
     @State private var type = "Personal"
     @State private var amount = 0.0
     
-    var expenses: Expenses
-    var settings: Settings
     
-    let types = ["Business", "Personal"]
+    let types = ["Personal", "Business"]
     
     var body: some View {
         NavigationStack {
@@ -28,7 +29,7 @@ struct AddView: View {
                         Text($0)
                     }
                 }
-                TextField("Amount", value: $amount, format: .currency(code: settings.currencyCode)).keyboardType(.decimalPad)
+                TextField("Amount", value: $amount, format: .currency(code: "CAD")).keyboardType(.decimalPad)
             }
             .navigationTitle("Add new expense")
             .toolbar {
@@ -40,7 +41,7 @@ struct AddView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         let item = ExpenseItem(name: name, type: type, amount: amount)
-                        expenses.items.append(item)
+                        modelContext.insert(item)
                         dismiss()
                     }
                 }
@@ -51,5 +52,6 @@ struct AddView: View {
 }
 
 #Preview {
-    AddView(expenses: Expenses(), settings: Settings())
+    AddView()
+        .modelContainer(for: ExpenseItem.self)
 }
