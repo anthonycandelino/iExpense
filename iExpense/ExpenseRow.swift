@@ -28,6 +28,8 @@ struct ExpenseRow: View {
                     .background(getExpenseLabelColor().clipShape(RoundedRectangle(cornerRadius: 5)))    
             }
         }
+        .accessibilityLabel("\(expense.name) \(expense.amount.formatted(.currency(code: "CAD")))")
+        .accessibilityHint("\(expense.type) Expense")
     }
     
     func getExpenseLabel() -> String {

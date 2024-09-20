@@ -59,13 +59,13 @@
 		BED2E2852C32E99C00C94A82 /* iExpense */ = {
 			isa = PBXGroup;
 			children = (
-				BED2E29C2C37045200C94A82 /* ExpenseRow.swift */,
-				BED2E2942C3602E000C94A82 /* ExpenseItem.swift */,
-				BED2E2862C32E99C00C94A82 /* iExpenseApp.swift */,
-				BED2E2882C32E99C00C94A82 /* ContentView.swift */,
-				BE221DA22C8B99A20042EAAA /* ExpenseItemsView.swift */,
 				BED2E2982C36180C00C94A82 /* AddView.swift */,
 				BED2E28A2C32E99D00C94A82 /* Assets.xcassets */,
+				BED2E2882C32E99C00C94A82 /* ContentView.swift */,
+				BED2E2942C3602E000C94A82 /* ExpenseItem.swift */,
+				BE221DA22C8B99A20042EAAA /* ExpenseItemsView.swift */,
+				BED2E29C2C37045200C94A82 /* ExpenseRow.swift */,
+				BED2E2862C32E99C00C94A82 /* iExpenseApp.swift */,
 				BED2E28C2C32E99D00C94A82 /* Preview Content */,
 			);
 			path = iExpense;
